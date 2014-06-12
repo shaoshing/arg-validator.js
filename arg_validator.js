@@ -46,13 +46,37 @@
     this.skip = yes;
   };
 
-  Validation.prototype.isExist = function(){
-    if(!this.skip){
-      if(this.argValue === undefined || this.argValue === null){
-        this.errors.push([this.argName, 'should exist']);
+  //////////////////////////////////////////////////////
+  //    Begin of Validation Rules                     //
+  //////////////////////////////////////////////////////
+
+  Validation.prototype.isExist = createValidation(function(){
+    if(this.argValue === undefined || this.argValue === null)
+      this.errors.push([this.argName, 'should exist']);
+  });
+
+  Validation.prototype.isString = createValidation(function(){
+    if(typeof this.argValue !== 'string')
+      this.errors.push([this.argName, 'is not a string']);
+  });
+
+  Validation.prototype.isNumber = createValidation(function(){
+    if(typeof this.argValue !== 'number')
+      this.errors.push([this.argName, 'is not a number']);
+  });
+
+  Validation.prototype.isBoolean = createValidation(function(){
+    if(typeof this.argValue !== 'boolean')
+      this.errors.push([this.argName, 'is not a boolean']);
+  });
+
+  function createValidation(validationFunc){
+    return function(){
+      if(!this.skip){
+        validationFunc.apply(this);
       }
-    }
-    return this;
-  };
+      return this;
+    };
+  }
 
 })();
