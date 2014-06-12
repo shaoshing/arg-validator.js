@@ -6,19 +6,25 @@
 
   function createValidator(){
     var errors = [];
-    var validator = function (argName, argValue){
-      var validations = new Validation(argName, argValue, errors);
+    var validator = function required(argName, argValue){
+      var validation = new Validation(argName, argValue, errors);
 
       var previousErrorsLength = errors.length;
-      validations.isExist();
-      if(previousErrorsLength !== errors.length){
-        validations.skipValidation(true);
-      }
+      validation.isExist();
+      if(previousErrorsLength !== errors.length)
+        validation.skipValidation(true);
 
-      return validations;
+      return validation;
     };
 
     validator.errors = errors;
+
+    validator.optional = function(argName, argValue){
+      var validation = new Validation(argName, argValue, errors);
+      if(argValue === undefined || argValue === null) validation.skipValidation(true);
+
+      return validation;
+    };
 
     validator.throwsOnError = function(){
       if(errors.length !== 0){
@@ -29,7 +35,9 @@
     validator.callsOnError = function(callback){
       if(errors.length !== 0){
         callback(errors);
+        return true;
       }
+      return false;
     };
 
     return validator;

@@ -25,18 +25,29 @@
       test.done();
     },
 
+    testOptionalArg: function(test){
+      var arg = argValidator();
+      arg.optional('name', null).isString();
+      test.equal(arg.errors.length, 0);
+      test.done();
+    },
+
     testOnError: function(test){
       var arg = argValidator();
       test.equal(arg.errors.length, 0);
       test.doesNotThrow(function(){ arg.throwsOnError(); });
-      arg.callsOnError(function(){ test.ok(false, 'Should not call the block when there has no error'); });
+      var called = arg.callsOnError(function(){ test.ok(false, 'Should not call the block when there has no error'); });
+      test.ok(!called);
 
       arg('String', false).isString();
       test.equal(arg.errors.length, 1);
       test.throws(function(){ arg.throwsOnError(); });
-      arg.callsOnError(function(){
-        test.done();
-      });
+      var callbackCalled = false
+      called = arg.callsOnError(function(){ callbackCalled = true; });
+      test.ok(called);
+      test.ok(callbackCalled);
+
+      test.done();
     },
 
     testIsString: function(test){
@@ -83,15 +94,15 @@
       arg('Hash', {a: 1, b: 2, c: 3}).hasProperty('a', 'b', 'c');
       test.equal(arg.errors.length, 0, arg.errors);
 
-      var arg = argValidator();
+      arg = argValidator();
       arg('Hash', {a: 1, b: 2}).hasProperty('a', 'b', 'c');
       test.equal(arg.errors.length, 1, arg.errors);
 
-      var arg = argValidator();
+      arg = argValidator();
       arg('Hash', {}).hasProperty('a', 'b', 'c');
       test.equal(arg.errors.length, 3, arg.errors);
 
       test.done();
-    },
+    }
   };
 })();
