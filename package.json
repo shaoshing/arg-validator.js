@@ -1,17 +1,27 @@
 {
   "name": "arg-validator",
-  "version": "0.1.0",
+  "homepage": "https://github.com/shaoshing/arg-validator.js",
   "description": "It makes easier validations of function arguments.",
   "author": "Shaoshing Lee <shaoshing@me.com>",
+  "version": "0.1.0",
+  "keywords": [
+    "validator", "validation", "validate", "arg", "args", "arguments", "function"
+  ],
   "main": "arg_validator.js",
   "scripts": {
-    "test": "mocha"
+    "test": "nodeunit arg_validator_test.js"
   },
-  "license": "MIT",
   "devDependencies": {
     "nodeunit": "^0.9.0"
   },
   "dependencies": {
     "validator": "^3.14.1"
-  }
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/shaoshing/arg-validator.js.git"
+  },
+  "licenses": [
+    {"type": "MIT" , "url": "http://opensource.org/licenses/MIT"}
+  ]
 }

@@ -3,6 +3,12 @@
 
 A simpler way to do argument validations on functions.
 
+## Install
+
+```bash
+npm install arg-validator --save
+```
+
 ## Example
 
 ```js
