@@ -22,6 +22,9 @@
       test.equal(arg.errors.length, 2);
       test.equal(validation.skip, true);
 
+      // arg must have both argName and argValue
+      test.throws(function(){validation = arg('Arg3 with not arg value');});
+
       test.done();
     },
 
@@ -139,6 +142,27 @@
       test.equal(arg.errors.length, 1, arg.errors);
       arg('Action', 'Wrong').isStringIn('GET', 'POST', 'DELETE');
       test.equal(arg.errors.length, 2, arg.errors);
+
+      test.done();
+    },
+
+    testIsFunction: function(test){
+      var arg = argValidator();
+      arg('Func', function(){}).isFunction();
+      test.equal(arg.errors.length, 0, arg.errors);
+      arg('Func', 'not a function').isFunction();
+      test.equal(arg.errors.length, 1, arg.errors);
+
+      test.done();
+    },
+
+    testIsObject: function(test){
+      var arg = argValidator();
+      var obj = new Array();
+      arg('Func', obj).isObject();
+      test.equal(arg.errors.length, 0, arg.errors);
+      arg('Func', 'not a object').isObject();
+      test.equal(arg.errors.length, 1, arg.errors);
 
       test.done();
     }

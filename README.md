@@ -60,9 +60,12 @@ helloAsync('Shaoshing', func(err){
 
 ## List of Validations
 
+- isExist // arg('a', a) is a shortcut to arg('a', a).isExist()
 - isString
 - isNumber
 - isBoolean
+- isFunction
+- isObject
 - isURL
 - isStringIn(values...)
 - hasProperty(requireProtocol)

@@ -9,6 +9,10 @@
   function createValidator(){
     var errors = [];
     var validator = function required(argName, argValue){
+      if(arguments.length != 2){
+        throw 'argument should have both argName and argValue.';
+      }
+
       var validation = new Validation(argName, argValue, errors);
       validation.isExist();
 
@@ -75,6 +79,16 @@
   Validation.prototype.isBoolean = createValidation(function(){
     if(typeof this.argValue !== 'boolean')
       this.errors.push([this.argName, 'is not a boolean']);
+  });
+
+  Validation.prototype.isFunction = createValidation(function(){
+    if(typeof this.argValue !== 'function')
+      this.errors.push([this.argName, 'is not a function']);
+  });
+
+  Validation.prototype.isObject = createValidation(function(){
+    if(typeof this.argValue !== 'object')
+      this.errors.push([this.argName, 'is not a object']);
   });
 
   Validation.prototype.hasProperty = createValidation(function(){
