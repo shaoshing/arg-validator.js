@@ -63,6 +63,7 @@ helloAsync('Shaoshing', func(err){
 - isString
 - isNumber
 - isBoolean
+- isURL
 - hasProperty
 
 ## License

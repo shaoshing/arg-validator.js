@@ -2,17 +2,15 @@
 (function(){
   'use strict';
 
+  var validator = require('validator');
+
   module.exports = createValidator;
 
   function createValidator(){
     var errors = [];
     var validator = function required(argName, argValue){
       var validation = new Validation(argName, argValue, errors);
-
-      var previousErrorsLength = errors.length;
       validation.isExist();
-      if(previousErrorsLength !== errors.length)
-        validation.skipValidation(true);
 
       return validation;
     };
@@ -63,10 +61,11 @@
       this.errors.push([this.argName, 'should exist']);
   });
 
-  Validation.prototype.isString = createValidation(function(){
+  Validation.prototype.isString = createValidation(isStringValidation);
+  function isStringValidation(){
     if(typeof this.argValue !== 'string')
       this.errors.push([this.argName, 'is not a string']);
-  });
+  }
 
   Validation.prototype.isNumber = createValidation(function(){
     if(typeof this.argValue !== 'number')
@@ -86,10 +85,22 @@
     }
   });
 
-  function createValidation(validationFunc){
+  Validation.prototype.isURL = createValidation(isStringValidation, function(){
+    if(!validator.isURL(this.argValue))
+      this.errors.push([this.argName, 'is not a URL']);
+  });
+
+  function createValidation(){
+    var validationFuncs = arguments;
     return function(){
-      if(!this.skip){
-        validationFunc.apply(this, arguments);
+      for(var vi = 0; vi < validationFuncs.length; vi++){
+        var validationFunc = validationFuncs[vi];
+        if(!this.skip){
+          var previousErrorsLength = this.errors.length;
+          validationFunc.apply(this, arguments);
+          if(previousErrorsLength !== this.errors.length)
+            this.skipValidation(true);
+        }
       }
       return this;
     };

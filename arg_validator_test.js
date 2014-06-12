@@ -103,6 +103,24 @@
       test.equal(arg.errors.length, 3, arg.errors);
 
       test.done();
+    },
+
+    testIsUrl: function(test){
+      var arg = argValidator();
+      arg('URL 1', 'http://example.com').isURL();
+      test.equal(arg.errors.length, 0, arg.errors);
+
+      arg = argValidator();
+      arg('URL 2', 'not an URL').isURL();
+      test.equal(arg.errors.length, 1, arg.errors);
+      test.equal(arg.errors[0][1], 'is not a URL');
+
+      arg = argValidator();
+      arg('URL 3', 1).isURL();
+      test.equal(arg.errors.length, 1, arg.errors);
+      test.equal(arg.errors[0][1], 'is not a string');
+
+      test.done();
     }
   };
 })();
