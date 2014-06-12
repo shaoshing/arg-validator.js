@@ -58,7 +58,7 @@
 
   Validation.prototype.isExist = createValidation(function(){
     if(this.argValue === undefined || this.argValue === null)
-      this.errors.push([this.argName, 'should exist']);
+      this.errors.push([this.argName, 'does not exist']);
   });
 
   Validation.prototype.isString = createValidation(isStringValidation);
@@ -85,8 +85,10 @@
     }
   });
 
-  Validation.prototype.isURL = createValidation(isStringValidation, function(){
-    if(!validator.isURL(this.argValue))
+  Validation.prototype.isURL = createValidation(isStringValidation, function(requireProtocol){
+    requireProtocol = requireProtocol || false;
+
+    if(!validator.isURL(this.argValue, {require_protocol: requireProtocol}))
       this.errors.push([this.argName, 'is not a URL']);
   });
 
