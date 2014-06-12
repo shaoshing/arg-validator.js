@@ -92,6 +92,12 @@
       this.errors.push([this.argName, 'is not a URL']);
   });
 
+  Validation.prototype.isStringIn = createValidation(isStringValidation, function(){
+    var values = Array.prototype.slice.call(arguments);
+    if(!validator.isIn(this.argValue, values))
+      this.errors.push([this.argName, 'is not in [' + values + ']']);
+  });
+
   function createValidation(){
     var validationFuncs = arguments;
     return function(){

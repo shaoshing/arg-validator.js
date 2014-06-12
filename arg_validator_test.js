@@ -129,6 +129,18 @@
       test.equal(arg.errors.length, 0, arg.errors);
 
       test.done();
+    },
+
+    testIsStringIn: function(test){
+      var arg = argValidator();
+      arg('Action', 'GET').isStringIn('GET', 'POST', 'DELETE');
+      test.equal(arg.errors.length, 0, arg.errors);
+      arg('Action', 1).isStringIn('GET', 'POST', 'DELETE');
+      test.equal(arg.errors.length, 1, arg.errors);
+      arg('Action', 'Wrong').isStringIn('GET', 'POST', 'DELETE');
+      test.equal(arg.errors.length, 2, arg.errors);
+
+      test.done();
     }
   };
 })();
