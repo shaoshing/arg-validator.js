@@ -42,11 +42,11 @@
       var arg = argValidator();
 
       arg('Number 1', 1).isNumber();
-      test.equal(arg.errors.length, 0);
+      test.equal(arg.errors.length, 0, arg.errors);
       arg('Number 2', 'not a number').isNumber();
-      test.equal(arg.errors.length, 1);
+      test.equal(arg.errors.length, 1, arg.errors);
       arg('Number 3', true).isNumber();
-      test.equal(arg.errors.length, 2);
+      test.equal(arg.errors.length, 2, arg.errors);
 
       test.done();
     },
@@ -55,11 +55,27 @@
       var arg = argValidator();
 
       arg('Boolean 1', true).isBoolean();
-      test.equal(arg.errors.length, 0);
+      test.equal(arg.errors.length, 0, arg.errors);
       arg('Boolean 2', 'not a boolean').isBoolean();
-      test.equal(arg.errors.length, 1);
+      test.equal(arg.errors.length, 1, arg.errors);
       arg('Boolean 3', 1).isBoolean();
-      test.equal(arg.errors.length, 2);
+      test.equal(arg.errors.length, 2, arg.errors);
+
+      test.done();
+    },
+
+    testHasProperty: function(test){
+      var arg = argValidator();
+      arg('Hash', {a: 1, b: 2, c: 3}).hasProperty('a', 'b', 'c');
+      test.equal(arg.errors.length, 0, arg.errors);
+
+      var arg = argValidator();
+      arg('Hash', {a: 1, b: 2}).hasProperty('a', 'b', 'c');
+      test.equal(arg.errors.length, 1, arg.errors);
+
+      var arg = argValidator();
+      arg('Hash', {}).hasProperty('a', 'b', 'c');
+      test.equal(arg.errors.length, 3, arg.errors);
 
       test.done();
     },

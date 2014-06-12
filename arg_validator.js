@@ -70,10 +70,18 @@
       this.errors.push([this.argName, 'is not a boolean']);
   });
 
+  Validation.prototype.hasProperty = createValidation(function(){
+    for(var pi = 0; pi < arguments.length; pi++){
+      var propertyName = arguments[pi];
+      if(this.argValue[propertyName] === undefined)
+        this.errors.push([this.argName, 'does not have property ['+propertyName+']']);
+    }
+  });
+
   function createValidation(validationFunc){
     return function(){
       if(!this.skip){
-        validationFunc.apply(this);
+        validationFunc.apply(this, arguments);
       }
       return this;
     };
