@@ -1,0 +1,11 @@
+{
+  "name": "arg-validator",
+  "version": "0.1.0",
+  "description": "It makes validation of function arguments easier.",
+  "main": "arg-validator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shaoshing Lee",
+  "license": "MIT"
+}
