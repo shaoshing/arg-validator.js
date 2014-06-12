@@ -25,6 +25,20 @@
       test.done();
     },
 
+    testOnError: function(test){
+      var arg = argValidator();
+      test.equal(arg.errors.length, 0);
+      test.doesNotThrow(function(){ arg.throwsOnError(); });
+      arg.callsOnError(function(){ test.ok(false, 'Should not call the block when there has no error'); });
+
+      arg('String', false).isString();
+      test.equal(arg.errors.length, 1);
+      test.throws(function(){ arg.throwsOnError(); });
+      arg.callsOnError(function(){
+        test.done();
+      });
+    },
+
     testIsString: function(test){
       var arg = argValidator();
 

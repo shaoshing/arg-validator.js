@@ -20,13 +20,13 @@
 
     validator.errors = errors;
 
-    validator.throwOnError = function(){
+    validator.throwsOnError = function(){
       if(errors.length !== 0){
-        throw "Error!";
+        throw errors;
       }
     };
 
-    validator.callOnError = function(callback){
+    validator.callsOnError = function(callback){
       if(errors.length !== 0){
         callback(errors);
       }
