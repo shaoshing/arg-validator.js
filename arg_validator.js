@@ -32,7 +32,7 @@
 
     validator.callsOnError = function(callback){
       if(errors.length !== 0){
-        callback(errors);
+        if(callback) callback(errors);
         return true;
       }
       return false;
