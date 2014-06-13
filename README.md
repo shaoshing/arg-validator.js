@@ -3,7 +3,7 @@
 
 A simpler way to do argument validations on functions.
 
-[![Build Status](https://travis-ci.org/shaoshing/arg-validator.js.svg?branch=master)](https://travis-ci.org/shaoshing/arg-validator.js) 
+[![NPM version](https://badge.fury.io/js/arg-validator.svg)](http://badge.fury.io/js/arg-validator) [![Build Status](https://travis-ci.org/shaoshing/arg-validator.js.svg?branch=master)](https://travis-ci.org/shaoshing/arg-validator.js) 
  
 ## Install
 
