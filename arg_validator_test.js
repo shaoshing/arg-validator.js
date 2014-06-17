@@ -121,7 +121,7 @@
       arg = argValidator();
       arg('URL 3', 1).isURL();
       test.equal(arg.errors.length, 1, arg.errors);
-      test.equal(arg.errors[0][1], 'is not a string');
+      test.equal(arg.errors[0][1], 'is not type of string');
 
       // requireProtocol option
       arg = argValidator();

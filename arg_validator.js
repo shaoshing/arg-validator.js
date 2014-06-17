@@ -2,8 +2,6 @@
 (function(){
   'use strict';
 
-  var validator = require('validator');
-
   module.exports = createValidator;
 
   function createValidator(){
@@ -67,28 +65,28 @@
 
   Validation.prototype.isString = createValidation(isStringValidation);
   function isStringValidation(){
-    if(typeof this.argValue !== 'string')
-      this.errors.push([this.argName, 'is not a string']);
+    this._isTypeOf('string');
   }
 
   Validation.prototype.isNumber = createValidation(function(){
-    if(typeof this.argValue !== 'number')
-      this.errors.push([this.argName, 'is not a number']);
+    this._isTypeOf('number');
   });
 
   Validation.prototype.isBoolean = createValidation(function(){
-    if(typeof this.argValue !== 'boolean')
-      this.errors.push([this.argName, 'is not a boolean']);
+    this._isTypeOf('boolean');
   });
 
   Validation.prototype.isFunction = createValidation(function(){
-    if(typeof this.argValue !== 'function')
-      this.errors.push([this.argName, 'is not a function']);
+    this._isTypeOf('function');
   });
 
   Validation.prototype.isObject = createValidation(function(){
-    if(typeof this.argValue !== 'object')
-      this.errors.push([this.argName, 'is not a object']);
+    this._isTypeOf('object');
+  });
+
+  Validation.prototype._isTypeOf = createValidation(function(typeName){
+    if(typeof this.argValue !== typeName)
+      this.errors.push([this.argName, 'is not type of ' + typeName]);
   });
 
   Validation.prototype.hasProperty = createValidation(function(){
@@ -99,16 +97,18 @@
     }
   });
 
+  var stringValidator = require('validator');
+
   Validation.prototype.isURL = createValidation(isStringValidation, function(requireProtocol){
     requireProtocol = requireProtocol || false;
 
-    if(!validator.isURL(this.argValue, {require_protocol: requireProtocol}))
-      this.errors.push([this.argName, 'is not a URL']);
+    if(!stringValidator.isURL(this.argValue, {require_protocol: requireProtocol}))
+      this.errors.push([this.argName, 'is not an URL']);
   });
 
   Validation.prototype.isStringIn = createValidation(isStringValidation, function(){
     var values = Array.prototype.slice.call(arguments);
-    if(!validator.isIn(this.argValue, values))
+    if(!stringValidator.isIn(this.argValue, values))
       this.errors.push([this.argName, 'is not in [' + values + ']']);
   });
 
