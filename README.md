@@ -82,6 +82,7 @@ makeHttpRequest('google.com', 'AMEND', {}, function(error){
 - isBoolean
 - isFunction
 - isObject
+- isArray
 - isURL
 - isStringIn(values...)
 - hasProperty(requireProtocol)

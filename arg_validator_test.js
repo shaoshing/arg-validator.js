@@ -92,6 +92,21 @@
       test.done();
     },
 
+    testIsArray: function(test){
+      var arg = argValidator();
+
+      arg('Array 1', []).isArray();
+      test.equal(arg.errors.length, 0, arg.errors);
+      arg('Array 2', 'not an Array').isArray();
+      test.equal(arg.errors.length, 1, arg.errors);
+      test.equal(arg.errors[0][1], 'is not instance of Array', arg.errors);
+      arg('Array 3', 1).isArray();
+      test.equal(arg.errors.length, 2, arg.errors);
+
+      test.done();
+    },
+
+
     testHasProperty: function(test){
       var arg = argValidator();
       arg('Hash', {a: 1, b: 2, c: 3}).hasProperty('a', 'b', 'c');
@@ -116,7 +131,7 @@
       arg = argValidator();
       arg('URL 2', 'not an URL').isURL();
       test.equal(arg.errors.length, 1, arg.errors);
-      test.equal(arg.errors[0][1], 'is not a URL');
+      test.equal(arg.errors[0][1], 'is not an URL');
 
       arg = argValidator();
       arg('URL 3', 1).isURL();
