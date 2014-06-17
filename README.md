@@ -3,8 +3,8 @@
 
 A simpler way to do argument validations on functions.
 
-[![NPM version](https://badge.fury.io/js/arg-validator.svg)](http://badge.fury.io/js/arg-validator) [![Build Status](https://travis-ci.org/shaoshing/arg-validator.js.svg?branch=master)](https://travis-ci.org/shaoshing/arg-validator.js) 
- 
+[![NPM version](https://badge.fury.io/js/arg-validator.svg)](http://badge.fury.io/js/arg-validator) [![Build Status](https://travis-ci.org/shaoshing/arg-validator.js.svg?branch=master)](https://travis-ci.org/shaoshing/arg-validator.js)
+
 ## Install
 
 ```bash
@@ -18,34 +18,39 @@ var argValidator = require('arg-validator');
 
 // required: name, age
 // optional: address
-function hello(name, age, address){
+function makeHttpRequest(url, action, params){
   var arg = argValidator();
-  arg('name', name).isString();
-  arg('age', age).isNumber();
-  arg.optional('address', address).isString();
-  arg.throwsOnError();
-
-  // now do some real business.
+  arg('url', url).isURL();
+  arg('action', action).isIn('GET', 'POST', 'PUT', 'DELETE');
+  arg.optional('params', params).isObject();
+  arg.throwsOnError(); // or access the errors by arg.errors
 }
-
-hello('Shaoshing', 12);             // correct
-hello('Shaoshing', 12, 'New York'); // correct
-
-hello('Shaoshing', '12'); // Boom!
-hello(true, 12);          // Boom!
 ```
 
 Compare with the code without arg-validation.js
 
 ```js
-function hello(name, age, address){
-  if(typeof name !== 'string') throw "name is not a string";
-  if(typeof age !== 'number') throw "age is not a string";
-  if(address){
-    if(typeof address != 'string')
-      throw "age is not a string";
+function makeHttpRequest(url, action, params){
+  if(some regexp validation of the url)
+    throw "url must be an url";
+  if(check if action is in ['GET', 'POST', 'PUT', 'DELETE'])
+    throw "action must be in GET, POST, PUT, DELETE";
+  if(params){
+    if(typeof params != 'object')
+      throw "params must be an object";
   }
 }
+```
+
+And you get all the validation errors
+
+```js
+makeHttpRequest('abc', 'AMEND', 12); // Exception,
+                                     //   [
+                                     //     "url is not an url",
+                                     //     "action is not in [GET, POST, PUT, DELETE]",
+                                     //     "params is not an object"
+                                     //   ]
 ```
 
 ## Asynchronous Example
@@ -53,17 +58,20 @@ function hello(name, age, address){
 ```js
 var argValidator = require('arg-validator');
 
-function helloAsync(name, callback){
+// required: name, age
+// optional: address
+function makeHttpRequest(url, action, params, callback){
   var arg = argValidator();
-  arg('name', name).isString();
+  arg('url', url).isURL();
+  arg('action', action).isIn('GET', 'POST', 'PUT', 'DELETE');
+  arg('params', params).isObject();
   if(arg.callsOnError(callback)) return;
-
-  // now do some real business.
 }
 
-helloAsync('Shaoshing', func(err){
-  // error will be the validation errors
-})
+makeHttpRequest('google.com', 'AMEND', {}, function(error){
+  console.log(error); // => ["action is not in [GET, POST, PUT, DELETE]"]
+});
+
 ```
 
 ## List of Validations
