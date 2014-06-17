@@ -98,7 +98,6 @@
     if(!(this.argValue instanceof object)){
       var objectName = object.toString().match(OBJECT_NAME_REG)[1];
       if(!objectName) objectName = 'unknown object';
-      console.log(objectName);
       this.errors.push([this.argName, 'is not instance of ' + objectName]);
     }
   });

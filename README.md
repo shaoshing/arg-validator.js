@@ -21,7 +21,7 @@ var argValidator = require('arg-validator');
 function makeHttpRequest(url, action, params){
   var arg = argValidator();
   arg('url', url).isURL();
-  arg('action', action).isIn('GET', 'POST', 'PUT', 'DELETE');
+  arg('action', action).isStringIn('GET', 'POST', 'PUT', 'DELETE');
   arg.optional('params', params).isObject();
   arg.throwsOnError(); // or access the errors by arg.errors
 }
@@ -63,7 +63,7 @@ var argValidator = require('arg-validator');
 function makeHttpRequest(url, action, params, callback){
   var arg = argValidator();
   arg('url', url).isURL();
-  arg('action', action).isIn('GET', 'POST', 'PUT', 'DELETE');
+  arg('action', action).isStringIn('GET', 'POST', 'PUT', 'DELETE');
   arg('params', params).isObject();
   if(arg.callsOnError(callback)) return;
 }
