@@ -45,12 +45,8 @@ function makeHttpRequest(url, action, params){
 And you get all the validation errors
 
 ```js
-makeHttpRequest('abc', 'AMEND', 12); // Exception,
-                                     //   [
-                                     //     "url is not an url",
-                                     //     "action is not in [GET, POST, PUT, DELETE]",
-                                     //     "params is not an object"
-                                     //   ]
+makeHttpRequest('abc', 'AMEND', 12); // ArgValidator: url is not an url. action is not
+                                     // in [GET, POST, PUT, DELETE]. params is not an object.
 ```
 
 ## Asynchronous Example
@@ -69,7 +65,15 @@ function makeHttpRequest(url, action, params, callback){
 }
 
 makeHttpRequest('google.com', 'AMEND', {}, function(error){
-  console.log(error); // => ["action is not in [GET, POST, PUT, DELETE]"]
+  console.log(error); // => ArgValidator: action is not in [GET, POST, PUT, DELETE]
+                      //            :
+                      //            :
+                      //            :
+                      //         [stack]
+  console.log(error.message); // => 'ArgValidator: action is not in [GET, POST, PUT, DELETE]'
+  console.log(error.errors);  // => [
+                              //      ['action', 'is not in [GET, POST, PUT, DELETE']
+                              //    ]
 });
 
 ```
