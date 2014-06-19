@@ -47,11 +47,17 @@
     this.argName = argName;
     this.argValue = argValue;
     this.errors = errors;
+    this.errors.message = "Errors: "
     this.skip = false;
   }
 
   Validation.prototype.skipValidation = function(yes){
     this.skip = yes;
+  };
+
+  Validation.prototype.addError = function(argName, message){
+    this.errors.push([argName, message]);
+    this.errors.message += argName + " " + message + '.' ;
   };
 
   //////////////////////////////////////////////////////
@@ -60,7 +66,7 @@
 
   Validation.prototype.isExist = createValidation(function(){
     if(this.argValue === undefined || this.argValue === null)
-      this.errors.push([this.argName, 'does not exist']);
+      this.addError(this.argName, 'does not exist');
   });
 
   Validation.prototype.isString = createValidation(isStringValidation);
@@ -86,7 +92,7 @@
 
   Validation.prototype._isTypeOf = createValidation(function(typeName){
     if(typeof this.argValue !== typeName)
-      this.errors.push([this.argName, 'is not type of ' + typeName]);
+      this.addError(this.argName, 'is not type of ' + typeName);
   });
 
   Validation.prototype.isArray = createValidation(function(){
@@ -98,7 +104,7 @@
     if(!(this.argValue instanceof object)){
       var objectName = object.toString().match(OBJECT_NAME_REG)[1];
       if(!objectName) objectName = 'unknown object';
-      this.errors.push([this.argName, 'is not instance of ' + objectName]);
+      this.addError(this.argName, 'is not instance of ' + objectName);
     }
   });
 
@@ -106,7 +112,7 @@
     for(var pi = 0; pi < arguments.length; pi++){
       var propertyName = arguments[pi];
       if(this.argValue[propertyName] === undefined)
-        this.errors.push([this.argName, 'does not have property ['+propertyName+']']);
+        this.addError(this.argName, 'does not have property ['+propertyName+']');
     }
   });
 
@@ -116,13 +122,13 @@
     requireProtocol = requireProtocol || false;
 
     if(!stringValidator.isURL(this.argValue, {require_protocol: requireProtocol}))
-      this.errors.push([this.argName, 'is not an URL']);
+      this.addError(this.argName, 'is not an URL');
   });
 
   Validation.prototype.isStringIn = createValidation(isStringValidation, function(){
     var values = Array.prototype.slice.call(arguments);
     if(!stringValidator.isIn(this.argValue, values))
-      this.errors.push([this.argName, 'is not in [' + values + ']']);
+      this.addError(this.argName, 'is not in [' + values + ']');
   });
 
   function createValidation(){

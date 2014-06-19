@@ -16,6 +16,7 @@
       // when the passed in argument is undefined or null, it should mark the
       // Validation#skip to true to skip all upcoming chained validations.
       validation = arg('Arg2', undefined);
+      console.log(arg.errors);
       test.equal(arg.errors.length, 1);
       test.equal(validation.skip, true);
       validation = arg('Arg3', null);
