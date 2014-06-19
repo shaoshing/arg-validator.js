@@ -28,17 +28,27 @@
 
     validator.throwsOnError = function(){
       if(errors.length !== 0){
-        throw errors;
+        throw makeError(errors);
       }
     };
 
     validator.callsOnError = function(callback){
       if(errors.length !== 0){
-        if(callback) callback(errors);
+        if(callback) callback(makeError(errors));
         return true;
       }
       return false;
     };
+
+    function makeError(errors){
+      var message = "ArgValidator: ";
+      for(var ei = 0; ei < errors.length; ei++){
+        message += errors[ei].join(' ') + '. ';
+      }
+      var err = new Error(message);
+      err.errors = errors;
+      return err;
+    }
 
     return validator;
   }
@@ -47,7 +57,6 @@
     this.argName = argName;
     this.argValue = argValue;
     this.errors = errors;
-    this.errors.message = "Errors: "
     this.skip = false;
   }
 
@@ -57,7 +66,6 @@
 
   Validation.prototype.addError = function(argName, message){
     this.errors.push([argName, message]);
-    this.errors.message += argName + " " + message + '.' ;
   };
 
   //////////////////////////////////////////////////////
