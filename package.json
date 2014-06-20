@@ -3,7 +3,7 @@
   "homepage": "https://github.com/shaoshing/arg-validator.js",
   "description": "It makes easier validations of function arguments.",
   "author": "Shaoshing Lee <shaoshing@me.com>",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "keywords": [
     "validator", "validation", "validate", "arg", "args", "arguments", "function"
   ],

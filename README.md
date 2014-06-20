@@ -49,7 +49,7 @@ makeHttpRequest('abc', 'AMEND', 12); // ArgValidator: url is not an url. action 
                                      // in [GET, POST, PUT, DELETE]. params is not an object.
 ```
 
-## Asynchronous Example
+### Asynchronous Example
 
 ```js
 var argValidator = require('arg-validator');
@@ -75,6 +75,29 @@ makeHttpRequest('google.com', 'AMEND', {}, function(error){
                               //      ['action', 'is not in [GET, POST, PUT, DELETE']
                               //    ]
 });
+
+```
+
+### Custom Validation
+
+```js
+function hello(world){
+  var arg = argValidator();
+  if(world !== 'world') arg.addError('world', 'must be "world".')
+  arg.throwsOnError();
+}
+
+// Or you can add a custom validation rule by
+argValidator.addValidation('isWorld', function(){
+  if(this.argValue !== 'world')
+    this.addError(this.argName, 'must be "world", but is "' + this.argValue + '"');
+})
+
+function hello(world){
+  var arg = argValidator();
+  arg('world', world).isWorld();
+  arg.throwsOnError();
+}
 
 ```
 

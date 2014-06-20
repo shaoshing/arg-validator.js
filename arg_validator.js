@@ -3,6 +3,7 @@
   'use strict';
 
   module.exports = createValidator;
+  createValidator.addValidation = addValidation;
 
   function createValidator(){
     var errors = [];
@@ -21,7 +22,7 @@
 
     validator.optional = function(argName, argValue){
       var validation = new Validation(argName, argValue, errors);
-      if(argValue === undefined || argValue === null) validation.skipValidation(true);
+      if(argValue === undefined || argValue === null) validation._skipValidation(true);
 
       return validation;
     };
@@ -38,6 +39,10 @@
         return true;
       }
       return false;
+    };
+
+    validator.addError = function(argName, message){
+      errors.push([argName, message]);
     };
 
     function makeError(errors){
@@ -60,7 +65,7 @@
     this.skip = false;
   }
 
-  Validation.prototype.skipValidation = function(yes){
+  Validation.prototype._skipValidation = function(yes){
     this.skip = yes;
   };
 
@@ -72,43 +77,43 @@
   //    Begin of Validation Rules                     //
   //////////////////////////////////////////////////////
 
-  Validation.prototype.isExist = createValidation(function(){
+  addValidation('isExist', function(){
     if(this.argValue === undefined || this.argValue === null)
       this.addError(this.argName, 'does not exist');
   });
 
-  Validation.prototype.isString = createValidation(isStringValidation);
+  addValidation('isString',isStringValidation);
   function isStringValidation(){
     this._isTypeOf('string');
   }
 
-  Validation.prototype.isNumber = createValidation(function(){
+  addValidation('isNumber', function(){
     this._isTypeOf('number');
   });
 
-  Validation.prototype.isBoolean = createValidation(function(){
+  addValidation('isBoolean', function(){
     this._isTypeOf('boolean');
   });
 
-  Validation.prototype.isFunction = createValidation(function(){
+  addValidation('isFunction', function(){
     this._isTypeOf('function');
   });
 
-  Validation.prototype.isObject = createValidation(function(){
+  addValidation('isObject', function(){
     this._isTypeOf('object');
   });
 
-  Validation.prototype._isTypeOf = createValidation(function(typeName){
+  addValidation('_isTypeOf', function(typeName){
     if(typeof this.argValue !== typeName)
       this.addError(this.argName, 'is not type of ' + typeName);
   });
 
-  Validation.prototype.isArray = createValidation(function(){
+  addValidation('isArray', function(){
     this._isInstanceOf(Array);
   });
 
   var OBJECT_NAME_REG = /function (\w+)\(.+/;
-  Validation.prototype._isInstanceOf = createValidation(function(object){
+  addValidation('_isInstanceOf', function(object){
     if(!(this.argValue instanceof object)){
       var objectName = object.toString().match(OBJECT_NAME_REG)[1];
       if(!objectName) objectName = 'unknown object';
@@ -116,7 +121,7 @@
     }
   });
 
-  Validation.prototype.hasProperty = createValidation(function(){
+  addValidation('hasProperty', function(){
     for(var pi = 0; pi < arguments.length; pi++){
       var propertyName = arguments[pi];
       if(this.argValue[propertyName] === undefined)
@@ -126,14 +131,14 @@
 
   var stringValidator = require('validator');
 
-  Validation.prototype.isURL = createValidation(isStringValidation, function(requireProtocol){
+  addValidation('isURL', isStringValidation, function(requireProtocol){
     requireProtocol = requireProtocol || false;
 
     if(!stringValidator.isURL(this.argValue, {require_protocol: requireProtocol}))
       this.addError(this.argName, 'is not an URL');
   });
 
-  Validation.prototype.isStringIn = createValidation(isStringValidation, function(){
+  addValidation('isStringIn', isStringValidation, function(){
     var values = Array.prototype.slice.call(arguments);
     if(!stringValidator.isIn(this.argValue, values))
       this.addError(this.argName, 'is not in [' + values + ']');
@@ -148,11 +153,18 @@
           var previousErrorsLength = this.errors.length;
           validationFunc.apply(this, arguments);
           if(previousErrorsLength !== this.errors.length)
-            this.skipValidation(true);
+            this._skipValidation(true);
         }
       }
       return this;
     };
   }
 
+  function addValidation(){
+    var name = arguments[0];
+    if(Validation.prototype[name])
+      throw new Error('ArgValidator: validation [' + name + '] already exists.');
+    var funcs = Array.prototype.slice.call(arguments, 1);
+    Validation.prototype[name] = createValidation.apply(null, funcs);
+  }
 })();

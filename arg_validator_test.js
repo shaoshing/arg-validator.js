@@ -29,6 +29,15 @@
       test.done();
     },
 
+    testCustomError: function(test){
+      var arg = argValidator();
+      test.equal(arg.errors.length, 0);
+      arg.addError('arg 1', 'custom error message');
+      test.equal(arg.errors.length, 1);
+      test.throws(function(){arg.throwsOnError();});
+      test.done();
+    },
+
     testOptionalArg: function(test){
       var arg = argValidator();
       arg.optional('name', null).isString();
@@ -179,6 +188,25 @@
       test.equal(arg.errors.length, 0, arg.errors);
       arg('Func', 'not a object').isObject();
       test.equal(arg.errors.length, 1, arg.errors);
+
+      test.done();
+    },
+
+    testCustomValidation: function(test){
+      argValidator.addValidation('hasCustomeValidation', function(){
+        this.addError(this.argName, 'triggered custom validation ' + this.argValue);
+      });
+
+      var arg = argValidator();
+      arg('I', '!').hasCustomeValidation();
+      test.equal(arg.errors.length, 1, arg.errors);
+      test.equal(arg.errors[0].join(' '), 'I triggered custom validation !');
+
+      test.throws(function(){
+        argValidator.addValidation('hasCustomeValidation', function(){
+          // You don't wannna add duplicate validation.
+        });
+      });
 
       test.done();
     }
