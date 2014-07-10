@@ -9,7 +9,7 @@
   ],
   "main": "arg_validator.js",
   "scripts": {
-    "test": "nodeunit arg_validator_test.js"
+    "test": "node_modules/nodeunit/bin/nodeunit arg_validator_test.js"
   },
   "devDependencies": {
     "nodeunit": "^0.9.0"
